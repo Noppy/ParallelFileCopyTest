@@ -33,7 +33,7 @@ import re
 import os
 
 SummaryResultCSVFile  = 'ResultsSummary.csv'
-DetailResultsFileHead = 'ResultsDetail_'
+DetailResultsFileHead = 'ResultsDetail'
 ExecCommand           = './_do_FileCopy.py'
 
 # ---------------------------
@@ -105,7 +105,7 @@ def main():
     unknown = 0
     repatter_success = re.compile(r"Success")
     repatter_failed  = re.compile(r"Failed")
-    with open( "{0}_{1:04d}.csv".format(DetailResultsFileHead, NumOfFile), "w" ) as MargedFiled:
+    with open( "{0}_{1:04d}_{2}.csv".format(DetailResultsFileHead, NumOfFile, datetime.datetime.fromtimestamp( StartTime ).strftime("%Y%m%d_%H%M%S")), "w" ) as MargedFiled:
         for i in range(0,NumOfFile):
             try:
                 fp = open( "temp_result_{0:04d}.csv".format(i), 'r')
