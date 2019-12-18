@@ -80,7 +80,7 @@ def main():
     process = []
     idx = 0
     for row in copylist:
-        cmd = [ 'python', ExecCommand, '--basetime', str(BaseTime), '--output', "temp_result_{0:04d}.csv".format(idx), row[0], row[1] ]
+        cmd = [ 'python', ExecCommand, '--basetime', str(BaseTime), '--output', "temp_result_{0:04d}.csv".format(idx), row[0], row[1], row[2] ]
         process.append( subprocess.Popen(cmd) )
         idx += 1
 
