@@ -47,6 +47,13 @@ def get_args():
         action='store',
         help='Specify CSV file path with a list of files to be copied')
 
+    parser.add_argument('-p', '--PreReadDir',
+        action='store',
+        default='NA',
+        type=str,
+        required=True,
+        help='Specify a pre-read directory path.')
+
     parser.add_argument('-d','--debug',
         action='store_true',
         default=False,
@@ -72,6 +79,19 @@ def main():
             copylist.append(row)
     NumOfFile = len(copylist)
  
+    # Pre-Read a directory recursively
+    print("Pre-Read a directory(2-3 minutes): {}".format(args.PreReadDir))
+    if not os.path.isdir(args.PreReadDir):
+        print( "Invalid directory: {}\n".format(args.PreReadDir) )
+        return(-1)
+    
+    for dirpath, dirnames, filenames in os.walk(args.PreReadDir):
+        for fileName in filenames:
+             if args.debug:
+                print( "{0}{1}{2}".format(dirpath, delimiter, fileName) )
+
+    exit
+
     # Run by background
     print( "Run CopyFile programs." )
     StartTime = time.time()

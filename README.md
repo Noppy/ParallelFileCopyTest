@@ -1,21 +1,22 @@
 # SGWPoC-ParallelFileCopyTest
 CSVリストに従ってパラレルでファイルコピーを実行し実行時間を測定するpythonツール
 # Precondition
-## (a)File Gateway
+### Windows Client
+- Windows Instance
+    - instance size: m5ad.4xlarge
+- [python3 for windows](https://www.python.org/downloads/windows/) (for this tool)
+- [git for windows ](https://gitforwindows.org/) (Used to install verification tools)
+### File Gateway
 - instance type: c5.4xlarge
 - ebs:
     - rootvol: io1, 240GiB
     - datavol: io1, 16TiB 3000IOPS
+### S3 and KMS
+- Any one bucket
+- KMS CMK for encrypting S3 objects
+- IAM Role for File Gateway
 
-## (b)Windows Client
-- Windows Instance
-    - instance size: m5ad.4xlarge
-- [python3 for windows](https://www.python.org/downloads/windows/)
-- [git for windows ](https://gitforwindows.org/) (Used to install verification tools)
-
-
-
-# Setup
+# Setting up
 ## (a) File Gateway
 Prerequisite: File gateway has been created and activated.
 ### Set SMB guest password
@@ -53,13 +54,37 @@ aws --profile ${PROFILE} storagegateway \
         --kms-key ${CMK_ARN} ;
 ```
 ## (b) Windows Client
-- install python3 and git
+Attention: CLI is assumed to be executed by powershell.
+- install [python3](https://www.python.org/downloads/windows/) and [git](https://gitforwindows.org/)
+- initialize local ssd drives
+```PowerShell
+# Check SSD Dirve
+get-disk
 
-```sh
+# Initialize
+initialize-disk 1
+New-Partition 1 -UseMaximumSize -DriveLetter D
+Format-Volume -DriveLetter D -FileSystem NTFS
+
+```
+- install this tool
+```PowerShell
+cd $Home\Desktop
 git clone https://github.com/Noppy/ParallelFileCopyTest.git
 ```
+- Mount SMB File share on F: Drive
+```PowerShell
+#Password is "HogeHoge@"
+net use F: "CHANGE-THE-CORRECT-FileGW-SMB-PATH" /user:"CHANGE-CORRECT-FGW-ID\smbguest"
+```
 
-# 使い方
+# Usage
+
+```powershell
+cd $Home\Desktop\ParallelFileCopyTest
+python.exe .\FileCopyTEst.py .\copy_list.csv
+```
+
 ## ファイルリストの作成(copy_list.csv)
 CSV形式で、タスクで実行するときに指定する、コピー元ファイル(2個)とコピー先ディレクトリを記載します。  
 1行、1タスク分で、100タスク実行する場合は100行記載します。
