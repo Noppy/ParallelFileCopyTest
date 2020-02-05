@@ -1,12 +1,60 @@
 # SGWPoC-ParallelFileCopyTest
 CSVリストに従ってパラレルでファイルコピーを実行し実行時間を測定するpythonツール
+# Precondition
+## (a)File Gateway
+- instance type: c5.4xlarge
+- ebs:
+    - rootvol: io1, 240GiB
+    - datavol: io1, 16TiB 3000IOPS
 
-# セットアップ
-## 必要なツール
-- python3
-- git (ツールのセットアップで利用)
+## (b)Windows Client
+- Windows Instance
+    - instance size: m5ad.4xlarge
+- [python3 for windows](https://www.python.org/downloads/windows/)
+- [git for windows ](https://gitforwindows.org/) (Used to install verification tools)
 
-## インストール
+
+
+# Setup
+## (a) File Gateway
+Prerequisite: File gateway has been created and activated.
+### Set SMB guest password
+```sh
+GATEWAY_ARN=<REPLACE_WITH_THE_COLLECT_GW_ARN>
+PASSWORD="HogeHoge@"
+
+aws --profile ${PROFILE} storagegateway \
+    set-smb-guest-password \
+        --gateway-arn ${GATEWAY_ARN} \
+        --password ${PASSWORD}
+```
+### Create a File share
+```sh
+# Set parameters
+BUCKETARN="<REPLACE_WITH_THE_CORRECT_BUCKET_ARN>"
+ROLEARN="<REPLACE_WITH_THE_CORRECT_IAM_ROLE_ARN_FOR_File_Gateway>"
+GATEWAY_ARN="<REPLACE_WITH_THE_COLLECT_GW_ARN>"
+CMK_ARN="<REPLACE_WITH_THE_COLLECT_CMK_ARN>"
+
+CLIENT_TOKEN=$(cat /dev/urandom | base64 | fold -w 38 | sed -e 's/[\/\+\=]/0/g' | head -n 1)
+
+# Create a file share
+aws --profile ${PROFILE} storagegateway \
+    create-smb-file-share \
+        --client-token ${CLIENT_TOKEN} \
+        --gateway-arn "${GATEWAY_ARN}" \
+        --location-arn "${BUCKETARN}" \
+        --role "${ROLEARN}" \
+        --object-acl bucket-owner-full-control \
+        --default-storage-class S3_STANDARD \
+        --guess-mime-type-enabled \
+        --authentication GuestAccess \
+        --kms-encrypted \
+        --kms-key ${CMK_ARN} ;
+```
+## (b) Windows Client
+- install python3 and git
+
 ```sh
 git clone https://github.com/Noppy/ParallelFileCopyTest.git
 ```
