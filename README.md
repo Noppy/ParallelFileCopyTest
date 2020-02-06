@@ -96,7 +96,7 @@ python.exe .\FileCopyTest.py --PreReadDir F:/20150101 .\copy_list.csv
 ```
 - This program behavior
     - First, register objects in metadata by recursively getting the file list of the specified directory(F:/20150101).
-    - Execute one process per line of copy_list.csv. Since CSV file has 100 lines, 100 processes are started
+    - Execute one process per line of copy_list.csv. Since CSV file has 50 lines, 50 processes are started
     - In the first to tenth lines of "copy_list.csv", objects of the folder for which metadata has been registered is read.(Directory: "F:/20150101") From the 11th line onwards, read objects that are not registered in metadata.
 
 ## Execution result
