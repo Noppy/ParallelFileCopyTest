@@ -54,12 +54,6 @@ Format-Volume -DriveLetter D -FileSystem NTFS
 cd $Home\Desktop
 git clone https://github.com/Noppy/ParallelFileCopyTest.git
 ```
-- Mount SMB File share on F: Drive
-```PowerShell
-#Password is "HogeHoge@"
-net use F: "CHANGE-THE-CORRECT-FileGW-SMB-PATH" /user:"CHANGE-CORRECT-FGW-ID\smbguest"
-```
-
 # Usage
 ## Create File Share
 Create a new file share so that there is no medatada registered object.
@@ -90,6 +84,12 @@ aws --profile ${PROFILE} storagegateway \
         --kms-key ${CMK_ARN} ;
 ```
 ## Execute this tool
+- Mount SMB File share on F: Drive
+```PowerShell
+#Password is "HogeHoge@"
+net use F: "CHANGE-THE-CORRECT-FileGW-SMB-PATH" /user:"CHANGE-CORRECT-FGW-ID\smbguest"
+```
+- Execute python program.
 ```powershell
 cd $Home\Desktop\ParallelFileCopyTest
 python.exe .\FileCopyTest.py --PreReadDir F:/20150101 .\copy_list.csv
