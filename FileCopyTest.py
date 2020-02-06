@@ -88,9 +88,7 @@ def main():
     for dirpath, dirnames, filenames in os.walk(args.PreReadDir):
         for fileName in filenames:
              if args.debug:
-                print( "{0}{1}{2}".format(dirpath, delimiter, fileName) )
-
-    exit
+                print( "{0}{1}{2}".format(dirpath, "/", fileName) )
 
     # Run by background
     print( "Run CopyFile programs." )
