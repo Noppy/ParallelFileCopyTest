@@ -80,7 +80,7 @@ def main():
     NumOfFile = len(copylist)
  
     # Pre-Read a directory recursively
-    print("Pre-Read a directory(2-3 minutes): {}".format(args.PreReadDir))
+    print("Read a directories(2-3 minutes): {}".format(args.PreReadDir))
     if not os.path.isdir(args.PreReadDir):
         print( "Invalid directory: {}\n".format(args.PreReadDir) )
         return(-1)
